@@ -71,7 +71,8 @@ public class ProductConverter {
             if (!violations.isEmpty()) {
                 StringBuilder errorMessage = new StringBuilder("Errores de validación:");
                 for (ConstraintViolation<ProductDto> violation : violations) {
-                    errorMessage.append("\n").append(violation.getPropertyPath()).append(": ").append(violation.getMessage());
+                    errorMessage.append("\n").append(violation.getPropertyPath()).append(": ")
+                            .append(violation.getMessage());
                 }
                 throw new IllegalArgumentException(errorMessage.toString());
             }

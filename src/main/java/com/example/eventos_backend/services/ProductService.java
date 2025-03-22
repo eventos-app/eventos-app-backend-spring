@@ -15,8 +15,6 @@ import com.example.eventos_backend.models.specifications.ProductSpecification;
 import com.example.eventos_backend.repositories.ProductRepository;
 import com.example.eventos_backend.utils.exceptions.custom_exceptions.NotFoundException;
 
-import java.util.ArrayList;
-import java.util.List;
 @Service
 public class ProductService {
 
@@ -24,29 +22,20 @@ public class ProductService {
     private ProductRepository productRepository;
 
     @Autowired
-    private ProductConverter productConverter;
-
-    @Autowired
     private CryptoService cryptoService;
 
-    @Transactional(readOnly = true)
-    public List<ProductDto> obtenerProducts(String name, Integer page, Integer size) {
-        List<ProductEntity> productEntities = new ArrayList<>();
-        Specification<ProductEntity> spec = Specification.where(ProductSpecification.obtenerProductsPorParametros(name));
-        
-        if (page != null && size != null) {
-            Pageable pageable = PageRequest.of(page, size);
-            Page<ProductEntity> productEntitiesPage = productRepository.findAll(spec, pageable);
-            productEntities = productEntitiesPage.getContent();
-        } else {
-            productEntities = productRepository.findAll(spec);
-        }
+    @Autowired
+    private ProductConverter productConverter;
 
-        List<ProductDto> productDtos = new ArrayList<>();
-        for (ProductEntity productEntity : productEntities) {
-            productDtos.add(productConverter.entityToDto(productEntity));
-        }
-        return productDtos;
+    @Transactional(readOnly = true)
+    public Page<ProductDto> obtenerProducts(String name, Integer page, Integer size) {
+        Pageable pageable = Pageable.unpaged();
+        if(page!=null && size!=null){
+            pageable = PageRequest.of(page, size);
+        } 
+        Specification<ProductEntity> spec = Specification.where(ProductSpecification.obtenerProductsPorParametros(name));
+        Page<ProductEntity> productEntitiesPage = productRepository.findAll(spec, pageable);
+        return productEntitiesPage.map(productConverter::entityToDto);
     }
 
     @Transactional(readOnly = true)

@@ -1,6 +1,7 @@
 package com.example.eventos_backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class ProductController {
 
 
     @GetMapping
-    public ResponseEntity<List<ProductDto>> getProducts(@RequestParam(required = false) String name,
+    public ResponseEntity<Page<ProductDto>> getProducts(@RequestParam(required = false) String name,
                                                          @RequestParam(required = false) Integer page,
                                                          @RequestParam(required = false) Integer size) {
         return new ResponseEntity<>(productService.obtenerProducts(name, page, size), HttpStatus.OK);
