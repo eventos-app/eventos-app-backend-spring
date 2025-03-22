@@ -1,0 +1,45 @@
+### Obtener todos los productos
+GET http://localhost:8088/v1.0/products
+Content-Type: application/json
+
+### Obtener productos con parámetros de búsqueda
+GET http://localhost:8088/v1.0/products?name=licor&page=0&size=10
+Content-Type: application/json
+
+### Obtener un producto por ID
+GET http://localhost:8088/v1.0/products/E2++anxEjAV4NfpAteDENcL7HgV1vt75UgEhdcIJP7o=
+Content-Type: application/json
+
+### Crear un nuevo producto
+POST http://localhost:8088/v1.0/products
+Content-Type: application/json
+
+{
+  "name": "Producto 2",
+  "description": "Descripción del producto",
+  "amount": 29.99,
+  "stock": 100,
+  "expirationDate": "2025-12-31",
+  "size": "M",
+  "idTypeProduct": 1,
+  "idProvider": 1
+}
+
+### Actualizar un producto existente
+PUT http://localhost:8088/v1.0/products/E2++anxEjAV4NfpAteDENcL7HgV1vt75UgEhdcIJP7o=
+Content-Type: application/json
+
+{
+  "name": "Producto Actualizado",
+  "description": "Nueva descripción del producto",
+  "amount": 39.99,
+  "stock": 150,
+  "expirationDate": "2026-12-31",
+  "size": "L",
+  "idTypeProduct": 1,
+  "idProvider": 1
+}
+
+### Eliminar un producto
+DELETE http://localhost:8088/v1.0/products/E2++anxEjAV4NfpAteDENcL7HgV1vt75UgEhdcIJP7o=
+Content-Type: application/json

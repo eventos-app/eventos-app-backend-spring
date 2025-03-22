@@ -1,0 +1,18 @@
+version: '3.3'
+
+services:
+  db:
+    image: postgres:14  # Utiliza una versión específica
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: festiva-db     # Nombre de la base de datos a crear
+      POSTGRES_USER: festiva        # Usuario de la base de datos
+      POSTGRES_PASSWORD: festiva-89320 # Contraseña del usuario
+    volumes:
+      - db_data:/var/lib/postgresql/data  # Persistencia de datos
+    ports:
+      - "5432:5432"  # Mapea el puerto 5432
+    restart: unless-stopped  # Reinicia el contenedor a menos que se detenga manualmente
+
+volumes:
+  db_data:  # Define el volumen para la persistencia
