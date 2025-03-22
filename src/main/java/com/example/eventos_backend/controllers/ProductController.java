@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.eventos_backend.models.converters.ProductConverter;
 import com.example.eventos_backend.models.dtos.ProductDto;
 import com.example.eventos_backend.services.ProductService;
 

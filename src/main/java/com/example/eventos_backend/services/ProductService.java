@@ -13,10 +13,10 @@ import com.example.eventos_backend.models.converters.ProductConverter;
 import com.example.eventos_backend.models.dtos.ProductDto;
 import com.example.eventos_backend.models.specifications.ProductSpecification;
 import com.example.eventos_backend.repositories.ProductRepository;
+import com.example.eventos_backend.utils.exceptions.custom_exceptions.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
-import jakarta.ws.rs.NotFoundException;
 @Service
 public class ProductService {
 
@@ -86,6 +86,6 @@ public class ProductService {
 
     private ProductEntity obtenerProductEntity(int id) {
         return productRepository.findByIdProductAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new NotFoundException("Product no encontrado"));
+                .orElseThrow(() -> new NotFoundException("Product not found"));
     }
 }

@@ -12,7 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 @Service
@@ -22,25 +25,34 @@ public class CryptoService {
     private String SECRET_KEY;
 
     public String encrypt(String strToEncrypt) {
+        if(strToEncrypt==null) return null;
         try {
-            KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-            keyGen.init(256);
-            SecretKey secretKey = keyGen.generateKey();
-            return Base64.getEncoder().encodeToString(secretKey.getEncoded());
+            SecretKey secretKey = getSecretKey(SECRET_KEY);
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            byte[] encryptedBytes = cipher.doFinal(strToEncrypt.getBytes(StandardCharsets.UTF_8));
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(encryptedBytes);
         } catch (Exception e) {
             throw new RuntimeException("Error while encrypting", e);
         }
     }
 
-    public String decrypt(String strToDecrypt){
+    public String decrypt(String strToDecrypt) {
+        if(strToDecrypt==null) return null;
         try {
+            SecretKey secretKey = getSecretKey(SECRET_KEY);
             Cipher cipher = Cipher.getInstance("AES");
-            SecretKeySpec secretKeySpec = new SecretKeySpec(SECRET_KEY.getBytes(), "AES");
-            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
-            return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)));
-
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
-            throw new RuntimeException("Error al desencriptar", e);
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            byte[] decryptedBytes = cipher.doFinal(Base64.getUrlDecoder().decode(strToDecrypt));
+            return new String(decryptedBytes, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            throw new RuntimeException("Error while decrypting", e);
         }
+    }
+
+    private SecretKey getSecretKey(String key) throws Exception {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] keyBytes = digest.digest(key.getBytes("UTF-8"));
+        return new SecretKeySpec(keyBytes, "AES");
     }
 }

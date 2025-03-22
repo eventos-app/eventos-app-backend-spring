@@ -51,7 +51,7 @@ public class ProductConverter {
         }
 
         return ProductEntity.builder()
-                .idProduct(Integer.parseInt(cryptoService.decrypt(productDto.getIdProduct())))
+                .idProduct(Integer.getInteger(cryptoService.decrypt(productDto.getIdProduct())))
                 .name(productDto.getName())
                 .description(productDto.getDescription())
                 .amount(productDto.getAmount())
@@ -77,7 +77,7 @@ public class ProductConverter {
             }
             return productDto;
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error al convertir JSON a ProductDto", e);
+            throw new RuntimeException("Error convert JSON to ProductDto", e);
         }
     }
 }
