@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.eventos_backend.models.dtos.ProductDto;
 import com.example.eventos_backend.services.ProductService;
-
-import java.util.List;
-
 @RestController
 @RequestMapping("/v1.0/products")
 @CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.DELETE, RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.OPTIONS})
