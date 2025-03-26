@@ -1,6 +1,9 @@
 package com.example.eventos_backend.services.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,8 +33,9 @@ public class ProductServiceImp implements ProductService{
     private ProductConverter productConverter;
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "products", key = "#root.methodName + '_' + T(java.util.Objects).toString(#name, 'null') + '_' + T(java.util.Objects).toString(#page, 'null') + '_' + T(java.util.Objects).toString(#size, 'null')")
     public Page<ProductDto> obtenerProducts(String name, Integer page, Integer size) {
-        Pageable pageable = Pageable.unpaged();
+        Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE);
         if(page!=null && size!=null){
             pageable = PageRequest.of(page, size);
         } 
@@ -41,6 +45,7 @@ public class ProductServiceImp implements ProductService{
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "product", key = "#id")
     public ProductDto obtenerProductDtoPorId(String id) {
         int idDesencriptado = desencriptarIdProduct(id);
         ProductEntity productEntity = obtenerProductEntity(idDesencriptado);
@@ -48,6 +53,7 @@ public class ProductServiceImp implements ProductService{
     }
 
     @Transactional
+    @CachePut(value = "product", key = "#result.id")
     public ProductDto crearProduct(ProductDto productDto) {
         ProductEntity productEntity = productConverter.dtoToEntity(productDto);
         ProductEntity savedEntity = productRepository.save(productEntity);
@@ -55,6 +61,7 @@ public class ProductServiceImp implements ProductService{
     }
 
     @Transactional
+    @CachePut(value = "product", key = "#id")
     public ProductDto actualizarProduct(String id, ProductDto productDto) {
         int idDesencriptado = desencriptarIdProduct(id);
         ProductEntity productEntity = obtenerProductEntity(idDesencriptado);
@@ -64,6 +71,7 @@ public class ProductServiceImp implements ProductService{
     }
 
     @Transactional
+    @CacheEvict(value = "product", key = "#id")
     public void eliminarProduct(String id) {
         int idDesencriptado = desencriptarIdProduct(id);
         ProductEntity productEntity = obtenerProductEntity(idDesencriptado);
