@@ -9,7 +9,8 @@ services:
       POSTGRES_USER: festiva        # Usuario de la base de datos
       POSTGRES_PASSWORD: festiva-89320 # Contraseña del usuario
     volumes:
-      - db_data:/var/lib/postgresql/data  # Persistencia de datos
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/festiva-schema.sql
+      - ./sql/data.sql:/docker-entrypoint-initdb.d/festiva-data.sql
     ports:
       - "5432:5432"  # Mapea el puerto 5432
     restart: unless-stopped  # Reinicia el contenedor a menos que se detenga manualmente
